@@ -9,9 +9,9 @@
 
 ```
 关于算法：
-算法名：Myers，原作者1953年生于美国Idaho州，现在是University of California at Berkeley的教授，
-美国科学院工程部的成员，贡献了模式匹配和计算生物学的基本算法。
-这位教授将寻找diff的过程，抽象成表示为图的搜索。
+Myers算法，原作者1953年生于美国Idaho州，University of California at Berkeley教授，
+美国科学院工程部成员，贡献了模式匹配和计算生物学的基本算法。
+算法将寻找diff的过程，抽象成表示为图的搜索。
 
 在网上找了一些关于该算法文档描述如下：
 以两个字符串，src=ABCABBA，dst=CBABAC为例，根据这两个字符串我们可以构造下面一张图，横轴是src内容，纵轴是dst内容。
