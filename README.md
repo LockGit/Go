@@ -6,7 +6,7 @@
 
 执行：go run http-proxy.go --debug=true  打开调式模式
 
-默认监听：8080 端口，把浏览器的代理设置成127.0.0.1 8080 端口，那么访问的所有资源将会走go代理脚本
+默认监听：8080 端口，把浏览器的代理设置成127.0.0.1 8080 端口，那么浏览器所访问资源将会走go代理脚本
 ```
 ![](https://github.com/LockGit/Go/blob/master/img/http-proxy.png)
 ```
