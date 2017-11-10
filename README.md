@@ -1,5 +1,34 @@
 # Go  
 
+### http-proxy.go 使用go实现一个http代理
+```
+执行：go run http-proxy.go -h 查看帮助
+
+执行：go run http-proxy.go --debug=true  打开调式模式
+
+默认监听：8080 端口，把浏览器的代理设置成127.0.0.1 8080 端口，那么访问的所有资源将会走go代理脚本
+```
+![](https://github.com/LockGit/Go/blob/master/img/http-proxy.png)
+```
+* 如果是https类型，CONNECT方法 （要求http协议>=1.1)
+    * 客户端通过CONNECT方法请求代理服务器创建一条到达任意目的服务器和端口的TCP链接，代理服务器仅对客户端和服务器之间的后续数据进行盲转发（只是转发，不关心，也不懂发送的内容是什么）。
+* 如果是http类型，直接代理转发
+
+代理https时的大致过程如下：
+1）客户端通过HTTP协议发送一条CONNECT方法的请求给代理服务器，告知代理服务器需要连接的主机和端口。
+CONNECT www.xxx.com:443 HTTP/1.1
+User-agent: Mozilla/5.0
+
+2）代理服务器一旦建立了和目标主机（上例的www.xxx.com:443）TCP连接，就会回送一条HTTP 200 Connection Established应答给客户端。
+example: HTTP/1.1 200 Connection Established
+
+3）此时隧道就建立起来了。客户端通过该HTTP隧道发送的所有数据都会被代理服务器（通过之前建立起来的与目标主机的TCP连接)原封不动的转发给目标服务器。目标服务器发送的所有数据也会被代理服务器原封不动的转发给客户端。
+
+4) 后续可完善认证体系，在vps上部署代理
+```
+
+
+
 ### diff.go 实现类似git中diff功能
 ```
 执行: go run diff.go 1.md 2.md
