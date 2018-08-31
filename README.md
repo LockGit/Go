@@ -1,5 +1,11 @@
 # Go  
 
+### leetcode with golang 
+```
+cat *.go |grep Time -A 1 |grep -v Time
+```
+![](https://github.com/LockGit/Go/blob/master/img/leetcode.gif)
+
 ### http-proxy.go 使用go实现一个http代理
 ```
 执行：go run http-proxy.go -h 查看帮助
