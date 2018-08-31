@@ -3,8 +3,10 @@
  * User: lock
  * Date: 2017/9/21
  * Time: 15:56
+ * git diff 算法
  */
 package main
+
 import (
 	"bufio"
 	"fmt"
@@ -13,7 +15,6 @@ import (
 	"strconv"
 	"strings"
 )
-
 
 type operation uint
 
@@ -45,16 +46,13 @@ func (a intArrays) set(i, v int) {
 	}
 }
 
-
 func prepend(s []operation, op operation) []operation {
 	return append([]operation{op}, s...)
 }
 
-
 func (a intArrays) clone() intArrays {
 	return append(intArrays{}, a...)
 }
-
 
 func (op operation) String() string {
 	switch op {
@@ -78,7 +76,7 @@ func (a intArrays) String() string {
 	return strings.Join(result, " ")
 }
 
-func main()  {
+func main() {
 	if len(os.Args) < 3 {
 		fmt.Println("usage: go run diff.go [src] [dst]")
 		os.Exit(0)
@@ -94,11 +92,10 @@ func main()  {
 	showDiff(src, dst)
 }
 
-
 /**
 读取文件
- */
-func readFile(p string) ([]string, error)  {
+*/
+func readFile(p string) ([]string, error) {
 	f, err := os.Open(p)
 	if err != nil {
 		return nil, err
@@ -114,7 +111,7 @@ func readFile(p string) ([]string, error)  {
 	return lines, nil
 }
 
-func showDiff(src, dst []string)  {
+func showDiff(src, dst []string) {
 	script := findPath(src, dst)
 	srcIndex, dstIndex := 0, 0
 	for _, op := range script {
@@ -133,10 +130,9 @@ func showDiff(src, dst []string)  {
 	}
 }
 
-
 /**
 寻找路径 核心算法
- */
+*/
 func findPath(src, dst []string) []operation {
 	n := len(src)
 	m := len(dst)
@@ -202,4 +198,3 @@ loop:
 	}
 	return script
 }
-

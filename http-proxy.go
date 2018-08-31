@@ -3,27 +3,28 @@
  * User: lock
  * Date: 2017/10/29
  * Time: 00:31
+ * 实现一个http代理
  */
 package main
 
 import (
-	"log"
-	"flag"
-	"net"
-	"fmt"
 	"bytes"
+	"flag"
+	"fmt"
+	"io"
+	"log"
+	"net"
 	"net/url"
 	"strings"
-	"io"
 )
 
 //set log format
-func init()  {
-	log.SetFlags(log.Ldate|log.Ltime|log.Lshortfile)
+func init() {
+	log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
 }
 
 //handle network request
-func handleRequest(client net.Conn,debug string)  {
+func handleRequest(client net.Conn, debug string) {
 	if client == nil {
 		return
 	}
@@ -74,15 +75,14 @@ func handleRequest(client net.Conn,debug string)  {
 	io.Copy(client, server)
 }
 
-
-func main()  {
+func main() {
 	ip := flag.String("ip", "127.0.0.1", "--set listen ip address")
-	port := flag.String( "port", "8080", "--set http listen port")
-	debug := flag.String("debug","false","--set debug mode true or false")
+	port := flag.String("port", "8080", "--set http listen port")
+	debug := flag.String("debug", "false", "--set debug mode true or false")
 	flag.Parse()
 
 	log.Printf("start listen %s:%s", *ip, *port)
-	listen, err := net.Listen("tcp", *ip + ":" + *port)
+	listen, err := net.Listen("tcp", *ip+":"+*port)
 	if err != nil {
 		log.Panic(err)
 	}
@@ -91,7 +91,6 @@ func main()  {
 		if err != nil {
 			log.Panic(err)
 		}
-		go handleRequest(client,*debug)
+		go handleRequest(client, *debug)
 	}
 }
-
