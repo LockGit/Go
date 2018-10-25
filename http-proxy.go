@@ -76,7 +76,7 @@ func handleRequest(client net.Conn, debug string) {
 }
 
 func main() {
-	ip := flag.String("ip", "127.0.0.1", "--set listen ip address")
+	ip := flag.String("ip", "0.0.0.0", "--set listen ip address")
 	port := flag.String("port", "8080", "--set http listen port")
 	debug := flag.String("debug", "false", "--set debug mode true or false")
 	flag.Parse()
