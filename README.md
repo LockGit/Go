@@ -1,18 +1,16 @@
 # Go  
 
-## Use go Implement Chinese and English translation tools in the command line（使用Golang实现的命令行下中英文翻译工具）
-[click here get source code](https://github.com/LockGit/Go/tree/master/go-dict)
+## Chinese and English translation tools in the command line（命令行下中英文翻译工具）
 ```
-据说内置的有道翻译的Key因为调用量过度频繁导致被封了？所以我就直接抓了Chrome浏览器的有道插件的数据包，请求这个api应该没有什么过度频繁的问题
+据说内置的有道翻译的Key因为调用量过度频繁导致被封了？
+所以我就直接抓了Chrome浏览器的有道插件的数据包，请求这个api应该没有什么过度频繁的问题
 ```
 ![](https://github.com/LockGit/Go/blob/master/img/dict.gif)
-
 
 ## 安装(Install)
 ```
 git clone git@github.com:LockGit/Go/go-dict && cd go-dict && go build -o /usr/local/bin/dict dict.go 
 ```
-
 
 ## 使用(Usage)
 ### 英译中(English To Chinese)
@@ -38,6 +36,7 @@ I love you
 我也爱你 : I Love You Too
 我就爱你 : The Arrangement
 ```
+
 
 ### leetcode with golang 
 ```
