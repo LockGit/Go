@@ -6,9 +6,9 @@
 ![](https://github.com/LockGit/Go/blob/master/img/dict.gif)
 
 
-## 安装(Install)
+## 一键安装(One key Install)
 ```
-git clone git@github.com:LockGit/Go/go-dict && cd go-dict && go build -o /usr/local/bin/dict dict.go 
+wget https://raw.githubusercontent.com/LockGit/Go/master/go-dict/dict.go && go build -o /usr/local/bin/dict dict.go 
 ```
 
 
