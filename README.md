@@ -38,17 +38,18 @@ I love you
 ```
 
 ### 命令行下的dns信息工具
-## 一键安装(OneKey Install)
+#### 一键安装(OneKey Install)
 ```
 wget https://raw.githubusercontent.com/LockGit/Go/master/fdns/FindDnsRecord.go && go build -o /usr/local/bin/fdns FindDnsRecord.go 
 ```
 
-## 使用(Usage)
+#### 使用(Usage)
 ![](https://github.com/LockGit/Go/blob/master/img/fdns.gif)
 
 
 ### golang shell tools
 + [run a golang shell in the command](https://github.com/LockGit/Go/blob/master/shell.go)
+
 
 ### leetcode with golang 
 ```

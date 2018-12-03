@@ -25,7 +25,7 @@ func main() {
 	args := os.Args[1:]
 	if len(args) < 1 {
 		fmt.Println("please input the domain !")
-		fmt.Println("example: go run FindDnsRecord.go baidu.com")
+		fmt.Println("example: fdns baidu.com")
 		os.Exit(0)
 	}
 
@@ -49,16 +49,10 @@ func main() {
 	startPrintln("Mx Record:")
 	mxRecords, _ := net.LookupMX(domain)
 	for _, mx := range mxRecords {
-		//hightRecord(mx.Host, string(mx.Pref))
 		hightRecord(mx.Host + fmt.Sprintf("%v", mx.Pref))
 
 	}
-	//startPrintln("Ptr Record:")
-	//ptr, _ := net.LookupAddr("8.8.8.8")
-	//for _, ptrValue := range ptr {
-	//	hightRecord(ptrValue)
-	//}
-	//startPrintln("----------")
+	startPrintln("----------")
 	startPrintln("Txt Record:")
 	txtRecords, _ := net.LookupTXT(domain)
 	for _, txt := range txtRecords {
