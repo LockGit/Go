@@ -40,7 +40,7 @@ I love you
 ### 命令行下的dns信息工具
 #### 一键安装(OneKey Install)
 ```
-wget https://raw.githubusercontent.com/LockGit/Go/master/fdns/FindDnsRecord.go && go build -o /usr/local/bin/fdns FindDnsRecord.go 
+wget https://raw.githubusercontent.com/LockGit/Go/master/fdns/FindDnsRecordFast.go && go build -o /usr/local/bin/fdns FindDnsRecordFast.go 
 ```
 
 #### 使用(Usage)
