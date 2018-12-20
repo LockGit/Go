@@ -61,6 +61,7 @@ wget https://raw.githubusercontent.com/LockGit/Go/master/fdns/FindDnsRecord.go &
 4,map需要初始化,最好用make([]int,x)完成初始化
 5,interface {}(*int) nil != nil 
 6,defer、return、返回值三者的执行逻辑应该是：return最先执行，return负责将结果写入返回值中；接着defer开始执行一些收尾工作；最后函数携带当前返回值退出。
+7,真正实现并行至少需要2个操作系统硬件线程并至少有两个goroutine时才能实现真正的并行,每个goroutine在一个单独的系统线程上执行指令。
 ```
 ```go
 func caseOne() *int {
