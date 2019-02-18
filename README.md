@@ -47,6 +47,13 @@ wget https://raw.githubusercontent.com/LockGit/Go/master/fdns/FindDnsRecordFast.
 ![](https://github.com/LockGit/Go/blob/master/img/fdns.gif)
 
 
+### 两种cache淘汰策略 lru.go
+```
+1,如果数据最近被访问过，那么将来被访问的几率也更高（访问后，把当前节点调整到链表头，新加入的Cache直接加到链表头中）
+2,如果访问的频率越高，将来被访问的几率更高。（需要一个计数器，计数器排序后，调整链表位置，淘汰无用Cache）
+go run lru.go
+```
+
 ### golang shell tools
 + [run a golang shell in the command](https://github.com/LockGit/Go/blob/master/shell.go)
 ```
