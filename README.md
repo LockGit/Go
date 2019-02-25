@@ -64,7 +64,7 @@ go run lru.go
 ```
 1,结构体可以比较，但是包含map的结构体不可比较。
 2,当程序运行到defer函数时，不会执行函数实现，但会将defer函数中的参数代码进行执行。
-3,使用 i.(type) ,必须在switch语句中,i必须是interface{}
+3,使用 i.(type) ,i必须是interface{}
 4,map需要初始化,最好用make([]int,x)完成初始化
 5,interface {}(*int) nil != nil 
 6,defer、return、返回值三者的执行逻辑应该是：return最先执行，return负责将结果写入返回值中；接着defer开始执行一些收尾工作；最后函数携带当前返回值退出。
