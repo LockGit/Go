@@ -90,7 +90,7 @@ type Test struct {
 执行如下：
 test := Test{}
 fmt.Println(unsafe.Sizeof(test))
-//output 32 8
+//output 32 
 最终输出为占用32个字节,这与前面所预期的结果完全不一样,这充分地说明了先前的计算方式是错误的!
 
 更改结构体成语顺序：
@@ -105,7 +105,7 @@ type Test2 struct {
 执行：
 test2 := Test2{}
 fmt.Println(unsafe.Sizeof(test2))
-//output 16 8
+//output 16 
 最终输出为占用16个字节！两次输出结果不一样。
 
 ```
