@@ -54,6 +54,90 @@ wget https://raw.githubusercontent.com/LockGit/Go/master/fdns/FindDnsRecordFast.
 go run lru.go
 ```
 
+### 内存对齐在golang中的表现
+```
+思考：声明一个结构体的时候，结构体的内部成员顺序是否会对内存的占用产生影响？
+首先了解一下:bool,int8,uint8,int32,uint32,int64,uint64,byte,string 类型占用多少字节。
+fmt.Printf("bool size: %d\n", unsafe.Sizeof(bool(true)))
+fmt.Printf("int8 size: %d\n", unsafe.Sizeof(int8(0)))
+fmt.Printf("uint8 size: %d\n", unsafe.Sizeof(uint8(0)))
+fmt.Printf("int32 size: %d\n", unsafe.Sizeof(int32(0)))
+fmt.Printf("uint32 size: %d\n", unsafe.Sizeof(uint32(0)))
+fmt.Printf("int64 size: %d\n", unsafe.Sizeof(int64(0)))
+fmt.Printf("uint64 size: %d\n", unsafe.Sizeof(uint64(0)))
+fmt.Printf("byte size: %d\n", unsafe.Sizeof(byte(0)))
+fmt.Printf("string size: %d\n", unsafe.Sizeof("lock"))
+得到如下：
+bool size: 1
+int8 size: 1
+uint8 size: 1
+int32 size: 4
+uint32 size: 4
+int64 size: 8
+uint64 size: 8
+byte size: 1
+string size: 16
+
+那么下面这个结构体理论上共占用 1+4+1+8+1=15 byte
+type Test struct {
+	a bool  // 1 byte
+	b int32 // 4 byte
+	c int8  // 1 byte
+	d int64 // 8 byte
+	e byte  // 1 byte
+}
+
+执行如下：
+test := Test{}
+fmt.Println(unsafe.Sizeof(test))
+//output 32 8
+最终输出为占用32个字节,这与前面所预期的结果完全不一样,这充分地说明了先前的计算方式是错误的!
+
+更改结构体成语顺序：
+type Test2 struct {
+	e byte  // 1 byte
+	c int8  // 1 byte
+	a bool  // 1 byte
+	b int32 // 4 byte
+	d int64 // 8 byte
+}
+
+执行：
+test2 := Test2{}
+fmt.Println(unsafe.Sizeof(test2))
+//output 16 8
+最终输出为占用16个字节！两次输出结果不一样。
+
+```
+分析:
+CPU读取内存是一块一块读取的，块的大小可以为 2、4、6、8、16 字节等大小。
+
+针对第一个输出32byte的实验：
+
+成员变量 | 类型 | 偏移量 | 自身占用
+---|---|---|---
+a | bool | 0 | 1
+字节对齐 | 无 | 1 | 3
+b | int32 | 4 | 4 
+c | int8 | 8 | 1
+字节对齐 | 无 | 9 | 7
+d | int64 | 16 | 8
+e | byte | 24 | 1
+字节对齐 | 无 | 25 | 7
+总占用大小 | - | - | 32
+
+针对第二个输出16byte的实验：
+
+成员变量 | 类型 | 偏移量 | 自身占用
+---|---|---|---
+e | byte  | 0 | 1
+c | int8  | 1 | 1
+a | bool  | 2 | 1
+字节对齐 | 无 | 3 | 1
+b | int32 | 4 | 4
+d | int64 | 8 | 8
+总占用大小 | - | - | 16
+
 ### golang shell tools
 + [run a golang shell in the command](https://github.com/LockGit/Go/blob/master/shell.go)
 ```
