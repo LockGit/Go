@@ -138,6 +138,10 @@ b | int32 | 4 | 4
 d | int64 | 8 | 8
 总占用大小 | - | - | 16
 
+以上过程由于字节对齐原因，
+也就是说CPU读取内存是一块一块读取的，而不是一次读取一个offset，所以造成了两次结果不一致。
+为什么要一块一块读取呢？如果不知道可以Google一下。
+
 ### golang shell tools
 + [run a golang shell in the command](https://github.com/LockGit/Go/blob/master/shell.go)
 ```
