@@ -2,8 +2,7 @@
 
 ### Chinese and English translation tools in the command line（命令行下中英文翻译工具）
 ```
-据说内置的有道翻译的Key因为调用量过度频繁导致被封了？
-所以我就直接抓了Chrome浏览器的有道插件的数据包，请求这个api应该没有什么过度频繁的问题
+dict is a command line tool by go
 ```
 ![](https://github.com/LockGit/Go/blob/master/img/dict.gif)
 
@@ -93,7 +92,7 @@ fmt.Println(unsafe.Sizeof(test))
 //output 32 
 最终输出为占用32个字节,这与前面所预期的结果完全不一样,这充分地说明了先前的计算方式是错误的!
 
-更改结构体成语顺序：
+更改结构体成员顺序：
 type Test2 struct {
 	e byte  // 1 byte
 	c int8  // 1 byte
@@ -140,7 +139,6 @@ d | int64 | 8 | 8
 
 以上过程由于字节对齐原因，
 也就是说CPU读取内存是一块一块读取的，而不是一次读取一个offset，所以造成了两次结果不一致。
-为什么要一块一块读取呢？如果不知道可以Google一下。
 
 ### golang shell tools
 + [run a golang shell in the command](https://github.com/LockGit/Go/blob/master/shell.go)
