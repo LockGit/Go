@@ -1,7 +1,6 @@
 ### Chinese and English translation tools in the command line（命令行下中英文翻译工具）
 ```
-据说内置的有道翻译的Key因为调用量过度频繁导致被封了？
-所以我就直接抓了Chrome浏览器的有道插件的数据包，请求这个api应该没有什么过度频繁的问题
+dict is a command line tool by go 
 ```
 ![](https://github.com/LockGit/Go/blob/master/img/dict.gif)
 
