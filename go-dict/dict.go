@@ -47,13 +47,17 @@ type Translation struct {
 
 func HttpGet(url string, ch chan []byte) chan []byte {
 	resp, err := http.Get(url)
-	defer resp.Body.Close()
+	if err == nil {
+		defer resp.Body.Close()
+	}
 	if err != nil {
-		fmt.Println("request error:", err)
+		fmt.Println("please enter ctrl+c ,request error:", err)
+		return ch
 	}
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		fmt.Println("io read error:", err)
+		fmt.Println("please enter ctrl+c ,io read error:", err)
+		return ch
 	}
 	ch <- body
 	return ch
@@ -67,7 +71,7 @@ func main() {
 		os.Exit(0)
 	}
 	word := strings.Join(args, " ")
-	requestUrl := fmt.Sprintf("http://dict.youdao.com//fsearch?client=deskdict&keyfrom=chrome.extension&q=%s&pos=-1&doctype=xml&xmlVersion=3.2&dogVersion=1.0&vendor=unknown&appVer=3.1.17.4208&le=eng", url.QueryEscape(word))
+	requestUrl := fmt.Sprintf("https://dict.youdao.com//fsearch?client=deskdict&keyfrom=chrome.extension&q=%s&pos=-1&doctype=xml&xmlVersion=3.2&dogVersion=1.0&vendor=unknown&appVer=3.1.17.4208&le=eng", url.QueryEscape(word))
 	ch := make(chan []byte)
 	go HttpGet(requestUrl, ch)
 
