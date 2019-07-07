@@ -45,22 +45,19 @@ type Translation struct {
 	Content string `xml:"content,CDATA"`
 }
 
-func HttpGet(url string, ch chan []byte) chan []byte {
+func HttpGet(url string, ch chan []byte) {
 	resp, err := http.Get(url)
 	if err == nil {
 		defer resp.Body.Close()
 	}
 	if err != nil {
 		fmt.Println("please enter ctrl+c ,request error:", err)
-		return ch
 	}
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		fmt.Println("please enter ctrl+c ,io read error:", err)
-		return ch
 	}
 	ch <- body
-	return ch
 }
 
 func main() {
