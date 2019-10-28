@@ -45,6 +45,23 @@ wget https://raw.githubusercontent.com/LockGit/Go/master/fdns/FindDnsRecordFast.
 #### 使用(Usage)
 ![](https://github.com/LockGit/Go/blob/master/img/fdns.gif)
 
+### 实现socks5代理
+```
+假设有如下网络情况：
+a----->b<------>c
+
+a可以访问b
+b不能访问a
+b与c之间可以互相访问
+实现c访问a上的服务
+
+具体实现：
+proxy_server.go 为服务端，proxy_client.go 为客户端
+在b上运行：go run proxy_server.go 8000 7999 （其中8000,7999为自定义监听的端口）
+在a上运行：go run proxy_client.go b的ip:8000  (其实是a主动连接b的8000端口，为后续的流转发铺垫）
+然后c使用b ip的7999端口作为socks5代理即可访问a上的内容
+更多场景，可自行探索
+```
 
 ### 两种cache淘汰策略 lru.go
 ```
