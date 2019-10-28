@@ -45,7 +45,7 @@ wget https://raw.githubusercontent.com/LockGit/Go/master/fdns/FindDnsRecordFast.
 #### 使用(Usage)
 ![](https://github.com/LockGit/Go/blob/master/img/fdns.gif)
 
-### 实现socks5代理
+### 实现socks5代理来访问看上去不能访问的资源
 ```
 假设有如下网络情况：
 a----->b<------>c
