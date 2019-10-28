@@ -10,7 +10,6 @@ import (
 	"encoding/binary"
 	"fmt"
 	"io"
-	"log"
 	"net"
 	"os"
 )
@@ -35,7 +34,7 @@ func (pc *ProxyClient) handleClientRequest(client net.Conn) {
 	if err != nil {
 		return
 	}
-	//只处理Socks5协议
+	//deal socks5 protocol
 	if b[0] == 0x05 {
 		client.Write([]byte{0x05, 0x00})
 		n, err = client.Read(b[:])
@@ -43,7 +42,7 @@ func (pc *ProxyClient) handleClientRequest(client net.Conn) {
 		switch b[3] {
 		case 0x01:
 			if err := binary.Read(bytes.NewReader(b[4:n]), binary.BigEndian, &pc); err != nil {
-				log.Println("请求解析错误")
+				fmt.Println("request parse error")
 				return
 			}
 			addr = pc.toAddr()
@@ -52,7 +51,7 @@ func (pc *ProxyClient) handleClientRequest(client net.Conn) {
 			var port uint16
 			err = binary.Read(bytes.NewReader(b[n-2:n]), binary.BigEndian, &port)
 			if err != nil {
-				log.Println(err)
+				fmt.Println(err)
 				return
 			}
 			addr = fmt.Sprintf("%s:%d", host, port)
@@ -63,9 +62,9 @@ func (pc *ProxyClient) handleClientRequest(client net.Conn) {
 			return
 		}
 		defer server.Close()
-		//响应客户端连接成功
+		//response client success
 		client.Write([]byte{0x05, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00})
-		//流转发
+		//stream forward
 		go io.Copy(server, client)
 		io.Copy(client, server)
 	}
