@@ -454,7 +454,6 @@ example: HTTP/1.1 200 Connection Established
 
 4) 后续可完善认证体系，在vps上部署代理
 ```
-## 使用(Usage)
 
 
 ### diff.go 实现类似git中diff功能
