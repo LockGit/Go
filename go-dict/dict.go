@@ -52,7 +52,6 @@ func HttpGet(url string, ch chan []byte) {
 		fmt.Println("please enter ctrl+c,http request err:", errReq.Error())
 		return
 	}
-	request.Header.Add("Host", "dict.youdao.com")
 	request.Header.Add("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.111 Safari/537.36")
 	request.Header.Add("Accept", "*/*")
 	request.Header.Add("Accept-Language", "zh-CN,zh;q=0.9,en;q=0.8")
