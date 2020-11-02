@@ -11,11 +11,11 @@
 package main
 
 import (
-	"math"
 	"fmt"
+	"math"
 )
 
-func planOne(price [] int) int {
+func planOne(price []int) int {
 	maxProfit := 0
 	minPrice := price[0]
 	for _, v := range price {
@@ -25,7 +25,7 @@ func planOne(price [] int) int {
 	return maxProfit
 }
 
-func planTwo(price [] int) int {
+func planTwo(price []int) int {
 	maxProfit := 0
 	for i := 1; i < len(price); i++ {
 		if price[i] > price[i-1] {
@@ -35,12 +35,12 @@ func planTwo(price [] int) int {
 	return maxProfit
 }
 
-func planThree(price [] int) int {
+func planThree(price []int) int {
 	length := len(price)
 	if length <= 0 {
 		return 0
 	}
-	a1, a2 := make([] int, length), make([] int, length)
+	a1, a2 := make([]int, length), make([]int, length)
 	maxProfit1, maxProfit2 := 0, 0
 	minPrice1, maxPrice2 := price[0], price[length-1]
 	for i := 0; i < length; i++ {
@@ -61,7 +61,7 @@ func planThree(price [] int) int {
 }
 
 func main() {
-	price := [] int{6, 12, 2, 1, 8, 4, 9, 1, 6, 10}
+	price := []int{6, 12, 2, 1, 8, 4, 9, 1, 6, 10}
 	fmt.Println("单次最大收益", planOne(price))
 	fmt.Println("既然能买卖任意次，那最大收益的方法就是尽可能多的低入高抛。只要明天比今天价格高，就应该今天买入明天再卖出,多次买入卖出后收益", planTwo(price))
 	fmt.Println("最多交易两次,手上最多只能持有一支股票，最大收益", planThree(price))

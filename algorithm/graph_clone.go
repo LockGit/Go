@@ -1,16 +1,16 @@
 /**
- * Created by GoLand.
- * User: lock
- * Date: 2018/8/24
- * Time: 17:37
- * 无向图复制 DFS,BFS
-    1
-   / \
-  /   \
- 0 --- 2
-      / \
-      \_/
- */
+* Created by GoLand.
+* User: lock
+* Date: 2018/8/24
+* Time: 17:37
+* 无向图复制 DFS,BFS
+   1
+  / \
+ /   \
+0 --- 2
+     / \
+     \_/
+*/
 package main
 
 import (
@@ -19,15 +19,15 @@ import (
 
 type graph struct {
 	label     int
-	neighbors [] *graph
+	neighbors []*graph
 }
 
 func cloneGraph(node *graph) *graph {
 	if node == nil {
 		return nil
 	}
-	var queue [] *graph
-	var cloneNeighbors [] *graph
+	var queue []*graph
+	var cloneNeighbors []*graph
 	var cloneNeighbor *graph
 	newNode := new(graph)
 	newNode.label = node.label
@@ -64,11 +64,11 @@ func main() {
 	node2 := new(graph)
 	node3 := new(graph)
 	node1.label = 1
-	node1.neighbors = [] *graph{node2, node3}
+	node1.neighbors = []*graph{node2, node3}
 	node2.label = 0
-	node2.neighbors = [] *graph{node1, node3}
+	node2.neighbors = []*graph{node1, node3}
 	node3.label = 2
-	node3.neighbors = [] *graph{node1, node2}
+	node3.neighbors = []*graph{node1, node2}
 	fmt.Println(node1.label, node1.neighbors)
 	cloneNode := cloneGraph(node1)
 	fmt.Println(cloneNode.label, cloneNode.neighbors)

@@ -25,7 +25,7 @@ func main() {
 		}
 	}
 
-	var res [] string
+	var res []string
 	for k, v := range dict {
 		if v > 1 {
 			res = append(res, k)

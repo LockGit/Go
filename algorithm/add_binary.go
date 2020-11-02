@@ -23,7 +23,7 @@ func main() {
 	n, m := len(a), len(b)
 
 	c, r := 0, 0
-	var res [] string
+	var res []string
 	for k := 0; k < n; k++ {
 		i := n - 1 - k
 		if k < m {
@@ -50,11 +50,11 @@ func main() {
 			c = (x + c) / 2
 		}
 		//往头部插入一个元素,还要把整形转回字符串
-		res = append([] string{strconv.Itoa(r)}, res...)
+		res = append([]string{strconv.Itoa(r)}, res...)
 	}
 
 	if c == 1 {
-		res = append([] string{strconv.Itoa(c)}, res...)
+		res = append([]string{strconv.Itoa(c)}, res...)
 	}
 
 	fmt.Println(strings.Join(res, ""))

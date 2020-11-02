@@ -16,7 +16,7 @@ return its zigzag level order traversal as:
   [20,9],
   [15,7]
 ]
- */
+*/
 package main
 
 import "fmt"
@@ -31,10 +31,10 @@ func getZigTreeData(root *tree) [][]int {
 	if root == nil {
 		return nil
 	}
-	var res [][] int
-	var queue [] *tree
+	var res [][]int
+	var queue []*tree
 	rev := false
-	var level [] int
+	var level []int
 	queue = append(queue, root)
 	queue = append(queue, nil)
 	for len(queue) > 0 {

@@ -8,15 +8,15 @@
 package main
 
 import (
-	"sort"
 	"fmt"
+	"sort"
 )
 
 func main() {
-	list := [] int{1, -1, 1, -2, 2, 0}
+	list := []int{1, -1, 1, -2, 2, 0}
 	fmt.Println("原始数据列表:", list)
 	sort.Ints(list)
-	var res [] []int
+	var res [][]int
 	for i := 0; i < len(list)-2; i++ {
 		if i == 0 || (i > 0 && list[i-1] != list[i]) {
 			left := i + 1
@@ -24,7 +24,7 @@ func main() {
 			for left < right {
 				sum := list[i] + list[left] + list[right]
 				if sum == 0 {
-					data := [] int{list[i], list[left], list[right]}
+					data := []int{list[i], list[left], list[right]}
 					res = append(res, data)
 					left = left + 1
 					right = right - 1

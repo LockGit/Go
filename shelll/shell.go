@@ -35,7 +35,7 @@ func runCommand(commandStr string) error {
 	case "exit":
 		os.Exit(0)
 	case "plus":
-		// not using `sum` because it's a default command in unix. 
+		// not using `sum` because it's a default command in unix.
 		if len(arrCommandStr) < 3 {
 			return errors.New("Required for 2 arguments")
 		}

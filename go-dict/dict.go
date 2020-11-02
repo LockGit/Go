@@ -46,16 +46,29 @@ type Translation struct {
 }
 
 func HttpGet(url string, ch chan []byte) {
-	resp, err := http.Get(url)
-	if err == nil {
-		defer resp.Body.Close()
+	client := &http.Client{}
+	request, errReq := http.NewRequest("GET", url, nil)
+	if errReq != nil {
+		fmt.Println("please enter ctrl+c,http request err:", errReq.Error())
+		return
 	}
-	if err != nil {
-		fmt.Println("please enter ctrl+c ,request error:", err)
+	request.Header.Add("Host", "dict.youdao.com")
+	request.Header.Add("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.111 Safari/537.36")
+	request.Header.Add("Accept", "*/*")
+	request.Header.Add("Accept-Language", "zh-CN,zh;q=0.9,en;q=0.8")
+	request.Header.Add("Connection", "close")
+	resp, errDo := client.Do(request)
+	if errDo == nil {
+		defer func() {
+			_ = resp.Body.Close()
+		}()
 	}
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		fmt.Println("please enter ctrl+c ,io read error:", err)
+	if errDo != nil {
+		fmt.Println("please enter ctrl+c ,request error:", errDo.Error())
+	}
+	body, errRead := ioutil.ReadAll(resp.Body)
+	if errRead != nil {
+		fmt.Println("please enter ctrl+c ,io read error:", errRead.Error())
 	}
 	ch <- body
 }
@@ -68,7 +81,7 @@ func main() {
 		os.Exit(0)
 	}
 	word := strings.Join(args, " ")
-	requestUrl := fmt.Sprintf("https://dict.youdao.com//fsearch?client=deskdict&keyfrom=chrome.extension&q=%s&pos=-1&doctype=xml&xmlVersion=3.2&dogVersion=1.0&vendor=unknown&appVer=3.1.17.4208&le=eng", url.QueryEscape(word))
+	requestUrl := fmt.Sprintf("https://dict.youdao.com/fsearch?client=deskdict&keyfrom=chrome.extension&q=%s&pos=-1&doctype=xml&xmlVersion=3.2&dogVersion=1.0&vendor=unknown&appVer=3.1.17.4208&le=eng", url.QueryEscape(word))
 	ch := make(chan []byte)
 	go HttpGet(requestUrl, ch)
 

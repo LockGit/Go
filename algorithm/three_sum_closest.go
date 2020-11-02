@@ -9,18 +9,18 @@
 package main
 
 import (
-	"sort"
-	"math"
 	"fmt"
+	"math"
+	"sort"
 )
 
 func main() {
-	list := [] int{-1, 2, 1, -4}
+	list := []int{-1, 2, 1, -4}
 	target := 10
 	sort.Ints(list)
-	var data [] int
+	var data []int
 	res := list[0] + list[1] + list[2]
-	data = [] int{list[0], list[1], list[2]}
+	data = []int{list[0], list[1], list[2]}
 	length := len(list)
 	for i := 0; i < length-2; i++ {
 		left := i + 1
@@ -29,7 +29,7 @@ func main() {
 			s := list[i] + list[left] + list[right]
 			if math.Abs(float64(s-target)) < math.Abs(float64(res-target)) {
 				res = s
-				data = [] int{list[i], list[left], list[right]}
+				data = []int{list[i], list[left], list[right]}
 			} else if s == target {
 				res = s
 				break

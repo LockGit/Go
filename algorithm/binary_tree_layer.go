@@ -17,7 +17,7 @@ return its level order traversal as:
   [9,20],
   [15,7]
 ]
- */
+*/
 package main
 
 import "fmt"
@@ -30,8 +30,8 @@ type BtreeNode struct {
 
 func layerOrder(node *BtreeNode) []int {
 	if node != nil {
-		stack := [] *BtreeNode{node}
-		var res [] int
+		stack := []*BtreeNode{node}
+		var res []int
 		for len(stack) > 0 {
 			node = stack[0]
 			stack = stack[1:]
@@ -52,10 +52,10 @@ func layerOrder(node *BtreeNode) []int {
 //有层次的遍历,放到二维数组中,方法1
 func layerOrderArr(root *BtreeNode) [][]int {
 	if root != nil {
-		queue := [] *BtreeNode{root}
+		queue := []*BtreeNode{root}
 		queue = append(queue, nil)
-		var level [] int
-		var res [][] int
+		var level []int
+		var res [][]int
 		for len(queue) > 0 {
 			root = queue[0]
 			queue = queue[1:]
@@ -83,9 +83,9 @@ func layerOrderArr(root *BtreeNode) [][]int {
 //有层次的遍历,放到二维数组中,方法2
 func layerOrderArr2(root *BtreeNode) [][]int {
 	if root != nil {
-		queue := [] *BtreeNode{root}
-		var level [] int
-		var res [][] int
+		queue := []*BtreeNode{root}
+		var level []int
+		var res [][]int
 		for len(queue) > 0 {
 			n := len(queue)
 			level = nil

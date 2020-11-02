@@ -9,8 +9,8 @@
 package main
 
 import (
-	"math"
 	"fmt"
+	"math"
 )
 
 type Element interface{}

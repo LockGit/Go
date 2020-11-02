@@ -12,8 +12,8 @@
 package main
 
 import (
-	"math"
 	"fmt"
+	"math"
 )
 
 func maxArea(list []int) int {

@@ -11,7 +11,7 @@ Given binary tree {1,#,2,3},
     /
    3
 return [3,2,1].
- */
+*/
 package main
 
 import "fmt"
@@ -31,7 +31,7 @@ func reverseInts(input []int) []int {
 
 func getTreeData(root *postOrderTree) []int {
 	var res []int
-	stack := [] *postOrderTree{root}
+	stack := []*postOrderTree{root}
 	for len(stack) > 0 {
 		root = stack[0]
 		stack = stack[1:]

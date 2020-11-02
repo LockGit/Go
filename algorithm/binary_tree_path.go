@@ -12,7 +12,7 @@
 	All root-to-leaf paths are:
 
 	["1->2->5", "1->3"]
- */
+*/
 package main
 
 import "fmt"
@@ -24,8 +24,8 @@ type PathTree struct {
 }
 
 func getTreePath(root *PathTree) [][]int {
-	var res [][] int
-	var cand [] int
+	var res [][]int
+	var cand []int
 	recursiveTreePath(root, cand, res)
 	return res
 }

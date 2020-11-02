@@ -13,7 +13,7 @@ Given binary tree {1,#,2,3},
    3
 
 return [1,2,3].
- */
+*/
 package main
 
 import "fmt"
@@ -26,7 +26,7 @@ type preOrderTree struct {
 
 func getPreTreeData(root *preOrderTree) []int {
 	var res []int
-	stack := [] *preOrderTree{root}
+	stack := []*preOrderTree{root}
 	for len(stack) > 0 {
 		root = stack[0]
 		stack = stack[1:]

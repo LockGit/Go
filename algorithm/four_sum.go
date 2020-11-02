@@ -8,16 +8,16 @@
 package main
 
 import (
-	"sort"
 	"fmt"
+	"sort"
 )
 
 func main() {
-	list := [] int{1, 0, -1, 0, -2, 2, 3}
+	list := []int{1, 0, -1, 0, -2, 2, 3}
 	target := 0
 	sort.Ints(list)
 	length := len(list)
-	var res [] []int
+	var res [][]int
 	for i := 0; i < length-3; i++ {
 		if i > 0 && list[i-1] == list[i] {
 			continue
@@ -31,7 +31,7 @@ func main() {
 			for left < right {
 				sum := list[i] + list[j] + list[left] + list[right]
 				if sum == target {
-					data := [] int{list[i], list[j], list[left], list[right]}
+					data := []int{list[i], list[j], list[left], list[right]}
 					res = append(res, data)
 					left = left + 1
 					right = right - 1
