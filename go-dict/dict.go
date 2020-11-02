@@ -14,6 +14,7 @@ import (
 	"net/url"
 	"os"
 	"strings"
+	"time"
 )
 
 type ParseXmlData struct {
@@ -46,7 +47,9 @@ type Translation struct {
 }
 
 func HttpGet(url string, ch chan []byte) {
-	client := &http.Client{}
+	client := &http.Client{
+		Timeout: 30 * time.Second,
+	}
 	request, errReq := http.NewRequest("GET", url, nil)
 	if errReq != nil {
 		fmt.Println("please enter ctrl+c,http request err:", errReq.Error())
@@ -64,10 +67,12 @@ func HttpGet(url string, ch chan []byte) {
 	}
 	if errDo != nil {
 		fmt.Println("please enter ctrl+c ,request error:", errDo.Error())
+		return
 	}
 	body, errRead := ioutil.ReadAll(resp.Body)
 	if errRead != nil {
 		fmt.Println("please enter ctrl+c ,io read error:", errRead.Error())
+		return
 	}
 	ch <- body
 }
