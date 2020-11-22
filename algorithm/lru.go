@@ -10,23 +10,23 @@ package main
 
 import "fmt"
 
-type Node struct {
+type LruLinkNode struct {
 	Key   int
 	Value int
-	pre   *Node
-	next  *Node
+	pre   *LruLinkNode
+	next  *LruLinkNode
 }
 
 type LRUCache struct {
 	limit   int
-	HashMap map[int]*Node
-	head    *Node
-	end     *Node
+	HashMap map[int]*LruLinkNode
+	head    *LruLinkNode
+	end     *LruLinkNode
 }
 
 func Constructor(capacity int) LRUCache {
 	lruCache := LRUCache{limit: capacity}
-	lruCache.HashMap = make(map[int]*Node, capacity)
+	lruCache.HashMap = make(map[int]*LruLinkNode, capacity)
 	return lruCache
 }
 
@@ -45,7 +45,7 @@ func (l *LRUCache) Put(key int, value int) {
 			oldKey := l.removeNode(l.head)
 			delete(l.HashMap, oldKey)
 		}
-		node := Node{Key: key, Value: value}
+		node := LruLinkNode{Key: key, Value: value}
 		l.addNode(&node)
 		l.HashMap[key] = &node
 	} else {
@@ -54,7 +54,7 @@ func (l *LRUCache) Put(key int, value int) {
 	}
 }
 
-func (l *LRUCache) refreshNode(node *Node) {
+func (l *LRUCache) refreshNode(node *LruLinkNode) {
 	if node == l.end {
 		return
 	}
@@ -62,7 +62,7 @@ func (l *LRUCache) refreshNode(node *Node) {
 	l.addNode(node)
 }
 
-func (l *LRUCache) removeNode(node *Node) int {
+func (l *LRUCache) removeNode(node *LruLinkNode) int {
 	if node == l.end {
 		l.end = l.end.pre
 	} else if node == l.head {
@@ -74,7 +74,7 @@ func (l *LRUCache) removeNode(node *Node) int {
 	return node.Key
 }
 
-func (l *LRUCache) addNode(node *Node) {
+func (l *LRUCache) addNode(node *LruLinkNode) {
 	if l.end != nil {
 		l.end.next = node
 		node.pre = l.end
