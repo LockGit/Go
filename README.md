@@ -19,8 +19,40 @@
 * golang的map,interface,defer,return,goroutine,slice
 * golang的两个nil可能不相等
 * golang mcrypt_rijndael_256 aes解密 (填坑记录）
+* golang实现一个http代理
 * golang的gc机制
 * diff算法（寻找diff的过程抽象成表示为图的搜索，类似git diff的差异比较，复杂!)
+
+### 数据结构与算法（汇总，一些算法的golang实现)
+```
+algorithm/05_array
+algorithm/06_linked_op_rev
+algorithm/07_lined_loop_merge
+algorithm/08_queue
+algorithm/09_stack
+algorithm/10_recursion
+algorithm/11_sort
+algorithm/12_sort
+algorithm/13_sort
+algorithm/14_sort
+algorithm/15_binary_search
+algorithm/16_binary_search
+algorithm/17_skiplinked
+algorithm/18_22_lru_hash_table
+algorithm/23_binary_tree
+algorithm/24_binary_search_tree
+algorithm/28_heap
+algorithm/29_heap_priority_queue
+algorithm/30_31_graph
+algorithm/32_33_bf_rk_bm_string
+algorithm/34_kmp_string
+algorithm/35_36_trie
+algorithm/37_greedy
+algorithm/38_39_traceback
+algorithm/40_42_dynamic_plan
+algorithm/45_bitmap
+```
+
 
 ### Chinese and English translation tools in the command line（命令行下中英文翻译工具）
 ```
@@ -347,6 +379,33 @@ A (黑) -> B (灰) -> C (白)
 4）清理(Sweeping, 并发)
 ```
 
+### http-proxy.go 使用go实现一个http代理
+```
+执行：go run http-proxy.go -h 查看帮助
+
+执行：go run http-proxy.go --debug=true  打开调式模式
+
+默认监听：8080 端口，把浏览器的代理设置成127.0.0.1 8080 端口，那么浏览器所访问资源将会走go代理脚本
+```
+![](https://github.com/LockGit/Go/blob/master/img/http-proxy.png)
+```
+* 如果是https类型，CONNECT方法 （要求http协议>=1.1)
+    * 客户端通过CONNECT方法请求代理服务器创建一条到达任意目的服务器和端口的TCP链接，代理服务器仅对客户端和服务器之间的后续数据进行盲转发（只是转发，不关心，也不懂发送的内容是什么）。
+* 如果是http类型，直接代理转发
+
+代理https时的大致过程如下：
+1）客户端通过HTTP协议发送一条CONNECT方法的请求给代理服务器，告知代理服务器需要连接的主机和端口。
+CONNECT www.xxx.com:443 HTTP/1.1
+User-agent: Mozilla/5.0
+
+2）代理服务器一旦建立了和目标主机（上例的www.xxx.com:443）TCP连接，就会回送一条HTTP 200 Connection Established应答给客户端。
+example: HTTP/1.1 200 Connection Established
+
+3）此时隧道就建立起来了。客户端通过该HTTP隧道发送的所有数据都会被代理服务器（通过之前建立起来的与目标主机的TCP连接)原封不动的转发给目标服务器。目标服务器发送的所有数据也会被代理服务器原封不动的转发给客户端。
+
+4) 后续可完善认证体系，在vps上部署代理
+```
+
 ### leetcode with golang 
 ```
 cat *.go |grep Time -A 1 |grep -v Time
@@ -451,34 +510,6 @@ cat *.go |grep Time -A 1 |grep -v Time
  * 是否是丑陋数，所谓丑陋数就是其质数因子只能是2,3,5。
 ```
 ![](https://github.com/LockGit/Go/blob/master/img/leetcode.gif)
-
-
-### http-proxy.go 使用go实现一个http代理
-```
-执行：go run http-proxy.go -h 查看帮助
-
-执行：go run http-proxy.go --debug=true  打开调式模式
-
-默认监听：8080 端口，把浏览器的代理设置成127.0.0.1 8080 端口，那么浏览器所访问资源将会走go代理脚本
-```
-![](https://github.com/LockGit/Go/blob/master/img/http-proxy.png)
-```
-* 如果是https类型，CONNECT方法 （要求http协议>=1.1)
-    * 客户端通过CONNECT方法请求代理服务器创建一条到达任意目的服务器和端口的TCP链接，代理服务器仅对客户端和服务器之间的后续数据进行盲转发（只是转发，不关心，也不懂发送的内容是什么）。
-* 如果是http类型，直接代理转发
-
-代理https时的大致过程如下：
-1）客户端通过HTTP协议发送一条CONNECT方法的请求给代理服务器，告知代理服务器需要连接的主机和端口。
-CONNECT www.xxx.com:443 HTTP/1.1
-User-agent: Mozilla/5.0
-
-2）代理服务器一旦建立了和目标主机（上例的www.xxx.com:443）TCP连接，就会回送一条HTTP 200 Connection Established应答给客户端。
-example: HTTP/1.1 200 Connection Established
-
-3）此时隧道就建立起来了。客户端通过该HTTP隧道发送的所有数据都会被代理服务器（通过之前建立起来的与目标主机的TCP连接)原封不动的转发给目标服务器。目标服务器发送的所有数据也会被代理服务器原封不动的转发给客户端。
-
-4) 后续可完善认证体系，在vps上部署代理
-```
 
 ### 数据结构与算法（汇总)
 * 10个数据结构 && 10个算法
@@ -836,6 +867,7 @@ Trie树的本质是利用字符串之间公共前缀，将重复的前缀合并�
 向量空间，欧几里得距离，编辑距离，余弦近似度
 B+树是B树的改进版，B+树中的节点不存储数据，只是索引，而B树中的节点存储数据，B树中的叶子节点并不需要链表来串联。B*树是B+树的变体，其中非根和非叶子结点再增加指向兄弟的指针
 寻路搜索，A*(启发式搜索)算法是对 Dijkstra 算法的优化和改造，A*算法可以更加快速地找到从起点到终点的路线(可能不是最优解)，但是它并不能像Dijkstra算法那样，找到最短路线
+es中的倒排索引其实用了trie树，对每个需要索引的key维护了一个trie树，用于定位到这个key在文件中的位置然后直接用有序列表直接去访问对应的documents
 ```
 
 ### diff.go 实现类似git中diff功能
