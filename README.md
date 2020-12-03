@@ -18,6 +18,7 @@
 * 布隆过滤器 && hash表 && Btree
 * golang的map,interface,defer,return,goroutine,slice
 * golang的两个nil可能不相等
+* golang mcrypt_rijndael_256 aes解密 (填坑记录）
 * golang的gc机制
 * diff算法（寻找diff的过程抽象成表示为图的搜索，类似git diff的差异比较，复杂!)
 
@@ -288,6 +289,24 @@ func main() {
 但是当 i 与 nil 比较时，会将 nil 转换为接口 (T=nil, V=nil)，与i (T=*int, V=nil) 不相等，因此 i != nil。因此 V 为 nil ，但 T 不为 nil 的接口不等于 nil。
 ```
 
+### golang mcrypt_rijndael_256 aes解密 (填坑记录）
+```
+在一次实际系统与系统间对接场景中，这边使用的是golang，对方是php。php使用mcrypt_rijndael_256加密了一段序列化后的php array类型的k,v数据。
+对方使用 MCRYPT_RIJNDAEL_256 , 对称密钥$key长度=32
+serialize(mcrypt_decrypt(MCRYPT_RIJNDAEL_256,
+            $key,
+            base64_decode($data),
+            MCRYPT_MODE_ECB,
+            mcrypt_create_iv(mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB), MCRYPT_RAND)
+))
+在测试中发现使用golang标准库无论如何也无法解密得出正确的结果，这个php的mcrypt_decrypt使用了MCRYPT_RIJNDAEL_256，
+从php的官网反馈：https://www.php.net/manual/en/function.mcrypt-encrypt.php#117667，
+除MCRYPT_RIJNDAEL_128外，MCRYPT_RIJNDAEL_192/256并未遵循AES-192/256标准进行加解密的算法，
+这语言特殊加密情况不遵循aes标准也不写个说明，从官网的用户的反馈才得知还有这么个坑，真是不讲究武德！
+所以此处用golang的aes标准库进行解密是无论如何也解密不出正确的数据的。
+那么就需要一个golang版的 MCRYPT_RIJNDAEL_256 非aes标准的解密，对应解密方法在本项目mcrypt_rijndael_256下。
+解密后得到的字符串就是php序列化后的字符串，然后转化php的序列化数据到golang对应的数据结构(php的序列化是有规律的，可以搜下golang的phpserialize这个库)
+```
 
 ```golang的gc机制
 最常见的垃圾回收算法有标记清除(Mark-Sweep) 和引用计数(Reference Count)，Go 语言采用的是标记清除算法。并在此基础上使用了三色标记法和写屏障技术，提高了效率。
@@ -806,6 +825,17 @@ Trie树的本质是利用字符串之间公共前缀，将重复的前缀合并�
 根据最优子结构，写出递归公式，也就是所谓的状态转移方程。根据状态转移方程，进行代码实现。一般情况下，有两种代码实现的方法，一种是递归加“备忘录”，另一种是迭代递推。
 
 状态转移方程是解决动态规划的关键。
+```
+
+* algorithm summary
+```
+拓扑排序，确定源码代码编译依赖关系，通过局部顺序来推导全局顺序的，一般都能用拓扑排序来解决，拓扑排序还能检测图中环的存在。Kahn算法
+最短路径，图算法，Dijkstra最短路径算法，类似的还有Bellford算法、Floyd算法
+位图，bitset，布隆过滤器（Bloom Filter）,url去重
+朴素贝叶斯，基于概率统计的过滤方式，垃圾短信过滤，垃圾邮件过滤
+向量空间，欧几里得距离，编辑距离，余弦近似度
+B+树是B树的改进版，B+树中的节点不存储数据，只是索引，而B树中的节点存储数据，B树中的叶子节点并不需要链表来串联。B*树是B+树的变体，其中非根和非叶子结点再增加指向兄弟的指针
+寻路搜索，A*(启发式搜索)算法是对 Dijkstra 算法的优化和改造，A*算法可以更加快速地找到从起点到终点的路线(可能不是最优解)，但是它并不能像Dijkstra算法那样，找到最短路线
 ```
 
 ### diff.go 实现类似git中diff功能
