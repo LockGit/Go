@@ -6,6 +6,7 @@
 * 中英文翻译互转 (抓的有道chrome扩展数据包)
 * 命令行下的dns信息工具 (golang简单实现类似dig的功能)
 * 实现socks5代理来访问看上去不能访问的资源 （网络边界突破，实现类似lcx,ngrok的功能……）
+* 服务编排 && 容器调度，k8s与mesos在实际项目中的应用 (系统架构)
 * 两种cache淘汰策略 lru.go (nginx,redis,squid中都有lru的身影）
 * 内存对齐在golang中的表现 (证明cpu读取内存是按块读取的)
 * 常用寄存器(假设是x86架构) && 常用汇编指令
@@ -118,6 +119,24 @@ proxy_server.go 为服务端，proxy_client.go 为客户端
 在a上运行：go run proxy_client.go b的ip:8000  (其实是a主动连接b的8000端口，为后续的流转发铺垫）
 然后c使用b ip的7999端口作为socks5代理即可访问a上的内容
 更多场景，可自行探索
+```
+
+### 服务编排 && 容器调度，k8s与mesos在实际项目中的应用 (系统架构)
+```
+k8s,mesos作为服务编排，容器调度的框架之一，在实际项目中也都有涉及,最开始mesos在公司内部兴起的时间早于k8s,后期渐渐被k8s赶上，
+，毕竟k8s有着Google的背景，也是当前比较热门的服务编排与容器调度方案，我也把应用从mesos迁移到了k8s之上。
+容器化的好处除了环境的一致性，在动态扩缩容时也变的十分方便，包括在发生升级故障时支持快速的的版本回退等一些列好处。
+mesos体系：
+dns --> lvs四层代理 --> nginx-lb七层代理 --> marathon-lb --> go micro api网关 ---> micro service
+这是早期mesos时代的流量流向，marathon-lb 是所有流量进入mesos集群的入口，后面的api网关流量来自 marathon-lb，
+其实 marathon-lb 也可以认为是一层应用层代理，而后面的 api网关 在流量进入微服务体系之前有统一入口，可用作 鉴权，熔断，限流 等操作。
+
+k8s体系：
+dns --> lvs四层代理  --> nginx-lb七层代理 --> ingress --> services ---> go micro api网关 --> pod (micro service)
+k8s中的services是针对pod的一层抽象层，对于完全无状态的应用确实可以部分实例部署在mesos上，部分部署在k8s上。
+但是对于我使用的微服务框架而言，不可以这样，本身微服务基于etcd做为服务发现，而k8s集群与mesos集群中的节点ip本身就是隔离开的，
+上报到etcd中的节点ip之间自然是网络不同的，如果存在容器间的服务实例调用，那么在网络层面就肯定是失败的。
+对与存在类似依赖的就必须全部迁移比较合适，而不是部分运行在mesos上，部分运行在k8s上。
 ```
 
 ### 两种cache淘汰策略 lru.go
