@@ -166,7 +166,7 @@ mov eax,dword ptr [ebp+8]
 ```
 mov ebp,esp中，esp寄存器中的值直接存储在了ebp中，也就是，如果esp寄存器的值是100的话，那么ebp中寄存器的值也是100。
 而在 mov eax,dword ptr [ebp+8] 这条指令中，ebp寄存器的值+8后会被解析称为内存地址。如果ebp=100，那么eax寄存器就是100+8地址的值。
-dword ptr 也叫做 double word pointer。简单的解释就是从内存地址中读取4字节的数据。
+dword ptr 也叫做 double word pointer，简单的解释就是从内存地址中读取4字节的数据。
 
 pop,push为cpu出栈，入栈指令，假设在32位x86系列CPU中，一次push或pop即可处理32位（4字节）的数据。
 
@@ -193,7 +193,7 @@ _TEXT 汇编代码
 
 ```assembly
 		xor ebx,ebx		;	将寄存器清0
-@4		call _MyFunc	;	调用MyFunc函数
+@4		call _MyFunc		;	调用MyFunc函数
 		inc ebx			;	ebx寄存器的值+1
 		cmp	ebx,10		;	将ebx寄存器的值和10比较
 		jl	short @4	; 	如果小于10就跳转到 @4
