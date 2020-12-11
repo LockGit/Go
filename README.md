@@ -8,7 +8,7 @@
 * 实现socks5代理来访问看上去不能访问的资源 （网络边界突破，实现类似lcx,ngrok的功能……）
 * 服务编排 && 容器调度，k8s与mesos在实际项目中的应用 (系统架构)
 * 常用寄存器(假设是x86架构) && 常用汇编指令
-* golang汇编代码对于取两个数之和一半的差异
+* golang对于两个数之和取一半的汇编代码差异（如何防止整型溢出）
 * 两种cache淘汰策略 lru.go (nginx,redis,squid中都有lru的身影）
 * 内存对齐在golang中的表现 (证明cpu读取内存是按块读取的)
 * golang shell tools (golang实现的交互式shell，实现一个简易版的交互终端)
@@ -201,7 +201,7 @@ _TEXT 汇编代码
 		jl	short @4	; 	如果小于10就跳转到 @4
 ```
 
-### golang汇编代码对于取两个数之和一半的差异
+### golang对于两个数之和取一半的汇编代码差异
 ```
 以下两份代码，作用都是对于取两个数之和取一半
 ```
@@ -215,6 +215,7 @@ func main() {
 }
 ```
 mid2.go (假设没有编译器优化的场景下，防止整形溢出)
+left < right 
 ```golang
 func main() {
 	left := 1000
@@ -231,9 +232,14 @@ go tool compile -N -l -S mid2.go
 + ![](https://github.com/LockGit/Go/blob/master/img/mid.png)
 ```
 对比可以发现，在禁止内联和禁止编译器优化的场景下。
-mid2.go生成的汇编指令【left + ((right - left) >> 1)】比【(left + right) / 2】mid1.go 生成的汇编指令少一次cpu操作
-如果允许go编译器优化,那么两个代码生成的实际汇编代码是一样的。 
+mid2.go生成的汇编指令比mid1.go生成的汇编指令少一次cpu指令操作，且两边的操作指令是有差异的。
 测试以上代码时运行环境（mac os x86_64)
+
+假如left,right值分别如下，那么mid.go在执行时会int溢出，而mid2.go成功执行
+left := uint64(2)
+right := uint64(18446744073709551614)
+
+对与两个数之和取一半防止整形溢出可以使用：left + ((right - left) >> 1)
 ```
  
 
