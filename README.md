@@ -203,7 +203,7 @@ _TEXT 汇编代码
 
 ### golang对于两个数之和取一半的汇编代码差异
 ```
-以下两份代码，作用都是对于取两个数之和取一半
+以下两份代码，作用都是对于取两个数之和取一半(left < right)
 ```
 mid1.go
 ```golang
@@ -214,13 +214,12 @@ func main() {
 	_ = mid
 }
 ```
-mid2.go (假设没有编译器优化的场景下，防止整形溢出)
-left < right 
+mid2.go (防止整形溢出)
 ```golang
 func main() {
 	left := 1000
 	right := 2000
-	mid := left + ((right - left) >> 1)
+	mid := left + (right - left) >> 1
 	_ = mid
 }
 ```
@@ -239,7 +238,8 @@ mid2.go生成的汇编指令比mid1.go生成的汇编指令少一次cpu指令操
 left := uint64(2)
 right := uint64(18446744073709551614)
 
-对与两个数之和取一半防止整形溢出可以使用：left + ((right - left) >> 1)
+对与两个数之和取一半防止整形溢出可以使用：left + (right - left) >> 1 
+即right-left之后进行左移1位然后加上left
 ```
  
 
