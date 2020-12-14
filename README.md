@@ -7,6 +7,7 @@
 * 命令行下的dns信息工具 (golang简单实现类似dig的功能)
 * 实现socks5代理来访问看上去不能访问的资源 （网络边界突破，实现类似lcx,ngrok的功能……）
 * 服务编排 && 容器调度，k8s与mesos在实际项目中的应用 (系统架构)
+* 一次针对线上微服务goroutine泄露的问题排查 (goroutine leak)
 * 常用寄存器(假设是x86架构) && 常用汇编指令
 * golang对于两个数之和取一半的汇编代码差异（如何防止整型溢出）
 * 两种cache淘汰策略 lru.go (nginx,redis,squid中都有lru的身影）
@@ -145,6 +146,67 @@ k8s中的services是针对pod的一层抽象层，对于完全无状态的应用
 上报到etcd中的节点ip之间自然是网络不通的，如果存在容器间的服务实例调用，那么在网络层面就肯定是失败的。
 对与存在类似依赖的就必须全部迁移比较合适，而不是部分运行在mesos上，部分运行在k8s上。
 ```
+
+### 一次针对线上微服务goroutine泄露的问题排查
+```
+发现线上服务在运行一段时间(快1个月)之后，老是会出现莫名其妙的故障，比如基于twitter的snowflakeId发号器服务会出现发号失败，
+平常的一些基于go-micro应用服务也会有一些响应不过来，导致最终504错误，因为微服务加入了prometheus相关metrics,通过grafana
+监控发现有几个应用实例的goroutine数量在几十万之上，起初我一直以为是微服务框架在服务发现上可能存在未知bug，
+所以出现这种问题，一般由于业务的重要性，不可能长时间保留现场，刚开始的一次，通过重新发布应用到mesos，问题快速解决。
+但是一直没有时间查看具体原因。最近发现了第二次此类情况，于是着重对于此情况分析了一遍并暂时确定该问题的成因为goroutine泄露。
+
+背景：
+  微服务框架基于go-micro v2.9.1，起初在etcd集群之前增加了一个grpc proxy，对外使用vip，grpc proxy可以优化一些watch。
+对于应用中有大量watch的地方，使用grpc proxy是可以起到一定的优化作用，但是grpc proxy存在缓存，go-micro结合这个在升级服务
+时，可能会cache一些老的实例，所以后面把3个grpc proxy中的2个实例暂时移除了。
+
+复现：
+  在测试环境通过pprof也可以看到goutine的数量在随着时间的增长而增长，只不过测试环境由于开始测试需要，经常重新编译重启，导致一时
+不能快速看到goutine的增长。
+  访问：http://127.0.0.1:8090/debug/pprof/goroutine?debug=1 定位到第一个goutine的代码为框架中的memory.go文件96行发出
+于是顺着这个文件翻了一下框架源码。
+
+修复：
+翻看框架的源码发现，我在之前针对etcd由于网络io,磁盘io等等问题重新选主，导致的watch通道关闭后，
+kv变化无效导致应用无法感知到etcd的kv变化的问题做过一次优化(这个地方看像是框架watch异常了没有再次watch导致)
+因为可能的原因有很多，当时使用了定时补偿应用针对etcd的watch通道关闭后 kv变化无效问题：
+大致代码如下：（每1分钟重新获取最新的kv,用于针对watch失效的补充，如果这里不用这个方法那么就只能动框架的watch代码来修改尝试，作为watch补充机制，当前规模场景中影响还不大）
+```
+```golang
+tk := time.NewTicker(1 * time.Minute)
+defer tk.Stop()
+for {
+    <-tk.C
+    err := Conf.Load(etcdSource)
+    if err != nil {
+        logrus.Fatal("reload etcd config error: %s", err.Error())
+    }
+}
+```
+```
+项目中使用到了以上代码，问题也就出现在了以上代码之中：Conf.Load(etcdSource) 
+https://github.com/asim/go-micro/blob/v2.9.1/config/loader/memory/memory.go#L306
+之中可以看到Load方法的实现,其中go m.watch(idx, source)，在不停的创建协程又得不到释放
+```
+```golang
+for _, source := range sources {
+    set, err := source.Read()
+    ...
+    go m.watch(idx, source)
+}
+```
+```
+所以运行一段时间后，这个定时补偿的watch机制就会给系统创建大量的goroutine，当前的机制相当于每1分钟增加一个goroutine。
+所以线上服务在运行一段时间之后，会出现莫名其妙的故障，这个应该就是问题的成因了，我错误的使用了Load方法，这个方法只需要
+在应用初始化的时候执行一次就可以了！
+在这个文件中（https://github.com/asim/go-micro/blob/v2.9.1/config/loader/memory/memory.go#L209）
+我发现了一个Sync方法，它的描述是：Sync loads all the sources, calls the parser and updates the config
+正好是满足我的需求的。
+修复方法就是将 Conf.Load(etcdSource) 改成 Conf.Sync()即可，一段时间后通过监控并没有发现goroutine数量随着时间的递增儿递增，
+而是恢复到了正常的阈值，不像之前动辄几十万goroutine
+线上go_memstats_heap_ojbjects监控如下：
+```
++ ![](https://github.com/LockGit/Go/blob/master/img/go-micro-heap.png)
 
 ### 常用寄存器(假设是x86架构) && 常用汇编指令
 记忆方法：e开头，第二个字母为英文单词首字母
