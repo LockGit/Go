@@ -24,7 +24,7 @@
 * golang的map,interface,defer,return,goroutine,slice
 * golang的两个nil可能不相等
 * golang mcrypt_rijndael_256 aes解密 (填坑记录）
-* golang实现一个http代理
+* http-proxy.go 使用go实现一个http代理
 * golang的gc机制
 * redis相关数据结构及如何将具体内存地址有关的数据结构存储到磁盘中 && 二叉搜索树的索引如何存储
 * diff算法（寻找diff的过程抽象成表示为图的搜索，类似git diff的差异比较，复杂!)
@@ -628,10 +628,10 @@ A (黑) -> B (灰) -> C (白)
 
 ### http-proxy.go 使用go实现一个http代理
 ```
+http-proxy.go在本项目algorithm文件夹下
+
 执行：go run http-proxy.go -h 查看帮助
-
 执行：go run http-proxy.go --debug=true  打开调式模式
-
 默认监听：8080 端口，把浏览器的代理设置成127.0.0.1 8080 端口，那么浏览器所访问资源将会走go代理脚本
 ```
 ![](https://github.com/LockGit/Go/blob/master/img/http-proxy.png)
