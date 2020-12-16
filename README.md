@@ -305,7 +305,7 @@ right := uint64(18446744073709551614)
 ```
  
 
-### 两种cache淘汰策略 lru.go
+### 两种cache淘汰策略 algorithm/lru.go
 ```
 1,如果数据最近被访问过，那么将来被访问的几率也更高（访问后，把当前节点调整到链表头，新加入的Cache直接加到链表头中）
 2,如果访问的频率越高，将来被访问的几率更高。（需要一个计数器，计数器排序后，调整链表位置，淘汰无用Cache）
@@ -402,19 +402,24 @@ d | int64 | 8 | 8
 ### golang shell tools
 + [run a golang shell in the command](https://github.com/LockGit/Go/blob/master/shell.go)
 ```
+本项目shell文件夹下
 使用golang实现的shell工具
 ```
 
 ### golang实现一致性hash (从单节点走向分布式节点)
 + ![](https://github.com/LockGit/Go/blob/master/img/hash.png)
 ```
+本项目hash_node文件下
 解决数据倾斜问题，引入虚拟节点，hash环
 虚拟节为一个真实节点对应多个虚拟节点。虚拟节点扩充了节点的数量，解决了节点较少的情况下数据容易倾斜的问题。  
+```
 
-另：
+### golang实现类似nginx基于权重的upstream的轮询调度
+```
+参看本项目下的round_node文件夹下的算法实现
 实际场景中有很多基于权重的选择节点算法，比如nginx的加权轮询，参看本项目下的round_node中的算法实现
 1，每个节点用它们的当前值加上自己的权重。
-2，选择当前值最大的节点为选中节点，并把它的当前值减去所有节点的权重总和。            
+2，选择当前值最大的节点为选中节点，并把它的当前值减去所有节点的权重总和。     
 ```
 
 ### etcd watch机制的补充 (微服务)
@@ -570,6 +575,7 @@ func main() {
 
 ### golang mcrypt_rijndael_256 aes解密 (填坑记录）
 ```
+参考本项目mcrypt_rijndael_256文件夹下实现
 在一次实际系统与系统间对接场景中，这边使用的是golang，对方是php。php使用mcrypt_rijndael_256加密了一段序列化后的php array类型的k,v数据。
 对方使用 MCRYPT_RIJNDAEL_256 , 对称密钥$key长度=32
 serialize(mcrypt_decrypt(MCRYPT_RIJNDAEL_256,
