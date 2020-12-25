@@ -13,8 +13,8 @@
 * 两种cache淘汰策略 lru.go (nginx,redis,squid中都有lru的身影）
 * 内存对齐在golang中的表现 (证明cpu读取内存是按块读取的)
 * golang shell tools (golang实现的交互式shell，实现一个简易版的交互终端)
-* golang 实现一个正向后门 (backdoor,基于go的正向后门)
-* golang 实现一个反向后门 (backdoor,基于go的反向后门)
+* golang实现一个正向后门 (backdoor,基于go的正向后门)
+* golang实现一个反向后门 (backdoor,基于go的反向后门)
 * golang实现一致性hash (从单节点走向分布式节点)
 * golang实现类似nginx基于权重的upstream的轮询调度（负载均衡）
 * golang的互斥锁如何实现公平
