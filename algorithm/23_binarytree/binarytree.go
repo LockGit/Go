@@ -58,18 +58,40 @@ func lrdOrder(bt *binaryTree) {
 	fmt.Println(bt.data)
 }
 
+func printNodeVal(node *binaryTree, i int) {
+	if node == nil {
+		return
+	}
+	if i%2 == 0 {
+		fmt.Println(node.data)
+	}
+	printNodeVal(node.left, i+1)
+	printNodeVal(node.right, i+1)
+}
+
 func main() {
 	bt := &binaryTree{
 		data: 0,
 		left: &binaryTree{
-			data:  1,
-			left:  nil,
-			right: nil,
+			data: 1,
+			left: &binaryTree{
+				data: 3,
+			},
+			right: &binaryTree{
+				data: 4,
+			},
 		},
 		right: &binaryTree{
-			data:  2,
-			left:  nil,
-			right: nil,
+			data: 2,
+			left: &binaryTree{
+				data: 5,
+			},
+			right: &binaryTree{
+				data: 6,
+				left: &binaryTree{
+					data: 7,
+				},
+			},
 		},
 	}
 	fmt.Println("前序---")
@@ -80,4 +102,6 @@ func main() {
 	lrdOrder(bt)
 	fmt.Println("层序---")
 	levelOrder(bt)
+	fmt.Println("打印偶数层数的节点：")
+	printNodeVal(bt, 1)
 }

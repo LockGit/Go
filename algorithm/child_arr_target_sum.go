@@ -39,7 +39,7 @@ func checkMinLengthChildArr(arr []int, targetSum int) int {
 	if len(childTargetSumArr) == 0 {
 		return -1
 	}
-	min := int(^uint(0) >> 1) //set max to min
+	min := int(^uint(0) >> 1) //put max to min
 	for _, v := range childTargetSumArr {
 		fmt.Println(v)
 		itemLen := len(v)

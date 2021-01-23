@@ -18,7 +18,7 @@ import (
 	"strings"
 )
 
-//set log format
+//put log format
 func init() {
 	log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
 }
@@ -76,9 +76,9 @@ func handleRequest(client net.Conn, debug string) {
 }
 
 func main() {
-	ip := flag.String("ip", "0.0.0.0", "--set listen ip address")
-	port := flag.String("port", "8080", "--set http listen port")
-	debug := flag.String("debug", "false", "--set debug mode true or false")
+	ip := flag.String("ip", "0.0.0.0", "--put listen ip address")
+	port := flag.String("port", "8080", "--put http listen port")
+	debug := flag.String("debug", "false", "--put debug mode true or false")
 	flag.Parse()
 
 	log.Printf("start listen %s:%s", *ip, *port)

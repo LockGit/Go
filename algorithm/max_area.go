@@ -3,7 +3,7 @@
  * User: lock
  * Date: 2018/8/29
  * Time: 18:21
- * 动态规划---最大面积
+ * 单调栈---最大面积
 	For example,
 	Given heights = [2, 1, 5, 6, 2, 3],
 	return 10.

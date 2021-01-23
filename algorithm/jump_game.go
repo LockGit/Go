@@ -3,7 +3,7 @@
  * User: lock
  * Date: 2018/8/29
  * Time: 11:47
- * 跳跃游戏---动态规划
+ * 跳跃游戏
 For example:
 A = [2,3,1,1,4], return true.
 A = [3,2,1,0,4], return false.

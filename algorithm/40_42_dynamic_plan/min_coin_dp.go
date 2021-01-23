@@ -19,11 +19,11 @@ func min(nums ...int) int {
 }
 
 var status = map[int]int{
-	1: 1,
-	2: 2,
-	3: 1,
-	4: 2,
-	5: 1,
+	1: 1, //支付1元时，至少需要1枚硬币
+	2: 2, //支付2元时，至少需要2枚硬币
+	3: 1, //支付3元时，至少需要1枚硬币
+	4: 2, //支付4元时，至少需要2枚硬币
+	5: 1, //支付5元时，至少需要1枚硬币
 }
 
 // 递推公式 1 + min(calcMinCoinNum(money-1), calcMinCoinNum(money-3), calcMinCoinNum(money-5))
