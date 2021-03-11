@@ -58,15 +58,45 @@ func lrdOrder(bt *binaryTree) {
 	fmt.Println(bt.data)
 }
 
-func printNodeVal(node *binaryTree, i int) {
+//打印偶数层节点
+func printEvenNodeVal(node *binaryTree, i int) {
 	if node == nil {
 		return
 	}
 	if i%2 == 0 {
 		fmt.Println(node.data)
 	}
-	printNodeVal(node.left, i+1)
-	printNodeVal(node.right, i+1)
+	printEvenNodeVal(node.left, i+1)
+	printEvenNodeVal(node.right, i+1)
+}
+
+func printEvenNodeVal2Bfs(root *binaryTree) (depth int) {
+	if root == nil {
+		return depth
+	}
+	stack := make([]*binaryTree, 0)
+	stack = append(stack, root)
+	for len(stack) > 0 {
+		depth++
+		tmpStack := make([]*binaryTree, 0)
+		for len(stack) > 0 {
+			top := stack[len(stack)-1]      //末尾移除了一个
+			stack = stack[0 : len(stack)-1] //剩下的
+
+			if depth%2 == 0 {
+				fmt.Println("v is:", top.data)
+			}
+
+			if top.left != nil {
+				tmpStack = append(tmpStack, top.left)
+			}
+			if top.right != nil {
+				tmpStack = append(tmpStack, top.right)
+			}
+		}
+		stack = append(stack, tmpStack...)
+	}
+	return depth
 }
 
 func main() {
@@ -103,5 +133,8 @@ func main() {
 	fmt.Println("层序---")
 	levelOrder(bt)
 	fmt.Println("打印偶数层数的节点：")
-	printNodeVal(bt, 1)
+	printEvenNodeVal(bt, 1)
+
+	fmt.Println("bfs 打印偶数层节点：")
+	fmt.Println("深度=", printEvenNodeVal2Bfs(bt))
 }

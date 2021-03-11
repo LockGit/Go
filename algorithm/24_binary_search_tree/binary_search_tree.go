@@ -189,7 +189,6 @@ func maxDepthBfs(root *tree) int {
 				tmpStack = append(tmpStack, top.right)
 			}
 		}
-		stack = stack[0:0]
 		stack = append(stack, tmpStack...)
 	}
 

@@ -743,7 +743,8 @@ serialize(mcrypt_decrypt(MCRYPT_RIJNDAEL_256,
 解密后得到的字符串就是php序列化后的字符串，然后转化php的序列化数据到golang对应的数据结构(php的序列化是有规律的，可以搜下golang的phpserialize这个库)
 ```
 
-```golang的gc机制
+### golang的gc机制
+```
 最常见的垃圾回收算法有标记清除(Mark-Sweep) 和引用计数(Reference Count)，Go 语言采用的是标记清除算法。并在此基础上使用了三色标记法和写屏障技术，提高了效率。
 标记清除收集器是跟踪式垃圾收集器，其执行过程可以分成标记（Mark）和清除（Sweep）两个阶段：
 

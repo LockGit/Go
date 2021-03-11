@@ -13,7 +13,7 @@ import (
 	"sync"
 )
 
-//单链表
+//链表
 type linkLfu struct {
 	Val  interface{}
 	next *linkLfu
