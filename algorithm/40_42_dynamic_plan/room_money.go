@@ -86,7 +86,7 @@ type tree struct {
 	right *tree
 }
 
-//转变成二叉树求解，相邻节点不同同事被取钱
+//转变成二叉树求解，相邻节点不能同时被取钱
 //可以增加备忘录
 func treeRoomMoney(root *tree) (maxV int) {
 	if root == nil {

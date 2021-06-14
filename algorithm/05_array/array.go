@@ -29,7 +29,7 @@ func (a *arr) len() int {
 }
 
 func (a *arr) checkOutRange(index int) bool {
-	if index >= cap(a.data) {
+	if index >= len(a.data) {
 		return true
 	}
 	return false
@@ -37,7 +37,7 @@ func (a *arr) checkOutRange(index int) bool {
 
 //插入数值到索引index上
 func (a *arr) insert(index int, val int) error {
-	if a.len() == cap(a.data) {
+	if a.len() == len(a.data) {
 		return errors.New("arr full")
 	}
 	//越界check

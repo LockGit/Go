@@ -34,6 +34,28 @@ func inOrder(bt *binaryTree) {
 	inOrder(bt.right)
 }
 
+//非递归中序遍历实现（模拟入栈出栈的过程）
+func inOrderIter(bt *binaryTree) (result []interface{}) {
+	if bt == nil {
+		return
+	}
+	var stack []*binaryTree
+	for len(stack) > 0 || bt != nil {
+		if bt != nil {
+			stack = append(stack, bt)
+			bt = bt.left
+		} else {
+			top := stack[len(stack)-1] //取栈顶
+			result = append(result, top.data)
+			if len(stack) > 0 {
+				stack = stack[0 : len(stack)-1] //pop出栈顶元素
+			}
+			bt = top.right //栈顶元素的right赋值给bt
+		}
+	}
+	return
+}
+
 func levelOrder(bt *binaryTree) {
 	queue := []*binaryTree{bt}
 	for len(queue) > 0 {
@@ -56,6 +78,31 @@ func lrdOrder(bt *binaryTree) {
 	lrdOrder(bt.left)
 	lrdOrder(bt.right)
 	fmt.Println(bt.data)
+}
+
+//后续遍历的非递归实现
+func lrdOrderIter(bt *binaryTree) (result []interface{}) {
+	if bt == nil {
+		return
+	}
+	var stack []*binaryTree
+	var last *binaryTree
+	for len(stack) > 0 || bt != nil {
+		if bt != nil {
+			stack = append(stack, bt)
+			bt = bt.left
+		} else {
+			top := stack[len(stack)-1]
+			if top.right == nil || top.right == last {
+				stack = stack[0 : len(stack)-1] //pop出栈顶
+				result = append(result, top.data)
+				last = top //使用一个 last 指针记录上次出栈的节点
+			} else {
+				bt = top.right
+			}
+		}
+	}
+	return
 }
 
 //打印偶数层节点
@@ -100,6 +147,12 @@ func printEvenNodeVal2Bfs(root *binaryTree) (depth int) {
 }
 
 func main() {
+	/*
+		      0
+		  1       2
+		3   4    5  6
+		           7
+	*/
 	bt := &binaryTree{
 		data: 0,
 		left: &binaryTree{
@@ -137,4 +190,7 @@ func main() {
 
 	fmt.Println("bfs 打印偶数层节点：")
 	fmt.Println("深度=", printEvenNodeVal2Bfs(bt))
+
+	fmt.Println("非递归的中序：", inOrderIter(bt))
+	fmt.Println("非递归的后序：", lrdOrderIter(bt))
 }

@@ -4,7 +4,7 @@
 示例：
 输入："bbbb"
 输出：4
-一个可能最长的回文自序列为"bbbb"
+一个可能最长的回文子序列为"bbbb"
 */
 package main
 
@@ -44,4 +44,6 @@ func main() {
 	fmt.Println("long palindrome child seq length:", findLongPalindromeChildSeq(s))
 	s2 := "aba"
 	fmt.Println("long palindrome child seq length:", findLongPalindromeChildSeq(s2))
+	s3 := "xxabmbayz"
+	fmt.Println("long palindrome child seq length:", findLongPalindromeChildSeq(s3))
 }

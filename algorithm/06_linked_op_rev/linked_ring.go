@@ -74,7 +74,7 @@ func (l *linkLoop) addRingNode() {
 func (l *linkLoop) checkHaveLinkLoop() (b bool) {
 	link := l.Head
 	slow, fast := link, link
-	for slow != nil && fast != nil {
+	for fast != nil && fast.next != nil {
 		slow = slow.next
 		fast = fast.next.next
 		if slow == fast {
